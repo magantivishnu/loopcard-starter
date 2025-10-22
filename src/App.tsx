@@ -45,6 +45,9 @@ export default function App() {
           <div className="container mobile-safe">
             <Header />
             <Routes>
+              {/* ✅ Add this test route anywhere before the wildcard */}
+              <Route path="/ping" element={<div className="card">pong</div>} />
+
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/setup" element={<SetupWizard />} />
@@ -59,6 +62,7 @@ export default function App() {
               <Route path="/card/:slug" element={<PublicCard />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="/_probe" element={<div style={{padding:16,border:'2px solid red'}}>render OK</div>} />
             </Routes>
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 {
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
@@ -10,13 +9,12 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "vite/client"]
   },
   "include": ["src"]
 }
