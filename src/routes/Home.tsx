@@ -1,13 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '@/store/useAppStore'
 import LogoQR from '@/components/LogoQR'
-import { useAuth } from '@/auth/AuthProvider'
-import { hasSupabase } from '@/lib/supabaseClient'
 
 export default function Home() {
   const { profile } = useAppStore()
   const nav = useNavigate()
-  const { user } = useAuth()
+
+  const onPrimary = () => nav('/signup') // go to the new Signup screen
 
   const onLoadExisting = () => {
     if (profile) nav('/dashboard')
@@ -22,22 +21,13 @@ export default function Home() {
         </div>
 
         <h1 className="hero-title">LoopCard Pro</h1>
-        <p className="hero-subtitle">
-          AI-powered digital cards. Team-ready. Offline-first.
-        </p>
+        <p className="hero-subtitle">AI-powered digital cards. Team-ready. Offline-first.</p>
 
         <div className="grid gap-3">
-          {hasSupabase ? (
-            user ? (
-              <Link to="/dashboard" className="btn btn-primary btn-lg">Go to Dashboard</Link>
-            ) : (
-              <Link to="/login" className="btn btn-primary btn-lg">Create Free LoopCard</Link>
-            )
-          ) : (
-            <Link to="/setup" className="btn btn-primary btn-lg">Create Free LoopCard</Link>
-          )}
-
-          <button onClick={onLoadExisting} className="btn btn-lg btn-contrast">
+          <button className="btn btn-primary btn-lg w-full" onClick={onPrimary}>
+            Create Free LoopCard
+          </button>
+          <button className="btn btn-lg btn-contrast w-full" onClick={onLoadExisting}>
             Load Existing Card
           </button>
         </div>

@@ -1,72 +1,93 @@
-import { Routes, Route, Link, Navigate, useLocation } from 'react-router-dom'
-import Home from '@/routes/Home'
-import Login from '@/routes/Login'
-import SetupWizard from '@/routes/SetupWizard'
-import Dashboard from '@/routes/Dashboard'
-import PublicCard from '@/routes/PublicCard'
-import Settings from '@/routes/Settings'
-import { AuthProvider, useAuth } from '@/auth/AuthProvider'
-import ProtectedRoute from '@/auth/ProtectedRoute'
-
-function Header() {
-  const loc = useLocation()
-  const hideOn = ['/card/'] // hide header on public card view
-  const isHidden = hideOn.some((p) => loc.pathname.startsWith(p))
-  const { user, signOut } = useAuth()
-
-  if (isHidden) return null
-
-  return (
-    <header className="flex items-center justify-between mb-4">
-      <Link to="/" className="text-xl font-bold">LoopCard</Link>
-      <nav className="flex gap-2 text-sm items-center">
-        <Link to="/" className="btn">Home</Link>
-        <Link to="/setup" className="btn">Create Card</Link>
-        <Link to="/dashboard" className="btn">Dashboard</Link>
-        <Link to="/settings" className="btn">Settings</Link>
-        {user ? (
-          <>
-            <span className="hidden sm:inline text-sm text-gray-600">{user.email}</span>
-            <button className="btn" onClick={signOut}>Logout</button>
-          </>
-        ) : (
-          <Link to="/login" className="btn">Login</Link>
-        )}
-      </nav>
-    </header>
-  )
-}
+import React, { useEffect } from 'react';
+import AuthGate from './components/AuthGate';
+import { logEvent } from './lib/analytics';
+import { useAuth } from './contexts/AuthContext';
+import { supabase } from './lib/supabaseClient';
 
 export default function App() {
-  return (
-    <AuthProvider>
-      <div className="mobile-shell">
-        <div className="mobile-device">
-          <div className="container mobile-safe">
-            <Header />
-            <Routes>
-              {/* ✅ Add this test route anywhere before the wildcard */}
-              <Route path="/ping" element={<div className="card">pong</div>} />
+  const { user, signOut } = useAuth();
 
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/setup" element={<SetupWizard />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/card/:slug" element={<PublicCard />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-              <Route path="/_probe" element={<div style={{padding:16,border:'2px solid red'}}>render OK</div>} />
-            </Routes>
-          </div>
-        </div>
+  // Replace this with a real card id from your Supabase table when ready
+  const demoCardId = '00000000-0000-0000-0000-000000000000';
+
+  useEffect(() => {
+    logEvent({ cardId: demoCardId, type: 'view' });
+  }, []);
+
+  async function handleClick() {
+    await logEvent({ cardId: demoCardId, type: 'click', path: '/cta' });
+    alert('Click event logged to Supabase');
+  }
+
+  async function handleCreateCard() {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('cards')
+      .insert({
+        owner_id: user.id,
+        business_name: 'My Demo Card',
+        card_slug: `demo-${user.id.slice(0, 6)}`
+      })
+      .select();
+    if (error) console.error(error.message);
+    else alert(`Card created with slug: ${data?.[0]?.card_slug}`);
+  }
+
+  return (
+    <AuthGate>
+      <div style={{ fontFamily: 'sans-serif', padding: '24px' }}>
+        <h1>LoopCard Dashboard</h1>
+        <p>Authenticated as: {user?.email ?? 'No user'}</p>
+
+        <button
+          style={{
+            padding: '8px 16px',
+            marginRight: 8,
+            background: '#2563eb',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer'
+          }}
+          onClick={handleClick}
+        >
+          Log Click Event
+        </button>
+
+        <button
+          style={{
+            padding: '8px 16px',
+            marginRight: 8,
+            background: '#16a34a',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer'
+          }}
+          onClick={handleCreateCard}
+        >
+          Create Demo Card
+        </button>
+
+        <button
+          style={{
+            padding: '8px 16px',
+            background: '#dc2626',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 6,
+            cursor: 'pointer'
+          }}
+          onClick={signOut}
+        >
+          Sign Out
+        </button>
+
+        <p style={{ marginTop: 24, color: '#555' }}>
+          Each page load automatically logs a <strong>view</strong> event.  
+          Clicking “Log Click Event” inserts a <strong>click</strong> event.
+        </p>
       </div>
-    </AuthProvider>
-  )
+    </AuthGate>
+  );
 }
