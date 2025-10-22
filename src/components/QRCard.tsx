@@ -1,11 +1,13 @@
-
 import QRCode from 'react-qr-code'
+import { useAnalytics } from '@/store/useAnalytics'
 
 type Props = {
   url: string
 }
 
 export default function QRCard({ url }: Props) {
+  const log = useAnalytics(s => s.log)
+
   const downloadPng = () => {
     const svg = document.querySelector('#qr-svg') as SVGSVGElement | null
     if (!svg) return
@@ -21,6 +23,13 @@ export default function QRCard({ url }: Props) {
       a.download = 'loopcard-qr.png'
       a.href = canvas.toDataURL('image/png')
       a.click()
+      // Log AFTER successful render
+      try {
+        const slug = (new URL(url)).pathname.split('/').pop() || undefined
+        log('click_qr_download', { slug, meta: { url } })
+      } catch {
+        log('click_qr_download', { meta: { url } })
+      }
     }
     img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
   }

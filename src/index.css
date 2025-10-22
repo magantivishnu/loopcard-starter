@@ -1,13 +1,295 @@
+/* ---------------------------------------------------
+   LOOPCARD GLOBAL STYLES
+   Tailwind + Custom Utilities
+--------------------------------------------------- */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light; }
-body { @apply text-gray-900; }
-.container { @apply mx-auto max-w-lg px-4; }
-.card { @apply bg-white shadow-sm rounded-2xl p-4 border border-gray-100; }
-.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium border border-gray-200 active:scale-[0.99]; }
-.btn-primary { @apply bg-brand-600 text-white border-transparent; }
-.input { @apply w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400; }
-.label { @apply text-sm font-medium text-gray-700; }
+/* ---------------------------------------------------
+   BASE RESET & TYPOGRAPHY
+--------------------------------------------------- */
+
+html, body {
+  @apply bg-gray-50 text-gray-800 min-h-screen font-sans;
+}
+
+h1, h2, h3, h4 {
+  @apply font-semibold text-gray-800;
+}
+
+a {
+  @apply text-brand-600 hover:text-brand-700 transition-colors;
+}
+
+/* ---------------------------------------------------
+   GLOBAL ELEMENTS
+--------------------------------------------------- */
+
+/* Cards (used everywhere) */
+.card {
+  @apply bg-white rounded-2xl shadow-sm p-5 border border-gray-100;
+}
+
+/* Buttons */
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-medium border border-gray-200 bg-white hover:bg-gray-100 active:scale-[0.98] transition-all;
+}
+
+.btn-primary {
+  @apply bg-brand-600 text-white border-transparent hover:bg-brand-700;
+}
+
+/* Inputs */
+.input {
+  @apply w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent;
+}
+
+textarea.input {
+  @apply min-h-[90px] resize-none;
+}
+
+/* Accessibility helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------------------------------------------------
+   PROGRESS STEPS
+--------------------------------------------------- */
+
+.progress-steps {
+  @apply flex justify-between items-center gap-1 mb-2;
+}
+.progress-steps div {
+  @apply flex-1 h-2 bg-gray-200 rounded-full;
+}
+.progress-steps div.active {
+  @apply bg-brand-500;
+}
+
+/* ---------------------------------------------------
+   ICON BUTTON SYSTEM
+--------------------------------------------------- */
+
+.icon-btn {
+  @apply inline-flex items-center justify-center rounded-full w-12 h-12 border border-gray-200 bg-white shadow-sm active:scale-[0.98] transition-all duration-200;
+}
+
+.icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.icon-btn:hover {
+  @apply scale-105;
+}
+
+/* Primary actions (Call / WhatsApp / Mail in Dashboard) */
+.icon-btn-primary {
+  @apply text-white bg-brand-600 border-transparent;
+}
+.icon-btn-primary:hover {
+  @apply bg-brand-700;
+}
+
+/* ---------------------------------------------------
+   BRAND-COLORED SOCIAL ICONS
+--------------------------------------------------- */
+
+.icon-btn.instagram {
+  color: #fff;
+  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+  border: none;
+}
+.icon-btn.facebook {
+  background: #1877f2;
+  color: #fff;
+  border: none;
+}
+.icon-btn.snapchat {
+  background: #fffc00;
+  color: #000;
+  border: none;
+}
+.icon-btn.x {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+.icon-btn.threads {
+  background: #000;
+  color: #fff;
+  border: none;
+}
+.icon-btn.whatsapp {
+  background: #25d366;
+  color: #fff;
+  border: none;
+}
+.icon-btn.email {
+  background: #ea4335;
+  color: #fff;
+  border: none;
+}
+.icon-btn.website {
+  background: #0ea5e9; /* sky blue */
+  color: #fff;
+  border: none;
+}
+
+/* ---------------------------------------------------
+   COMPACT SOCIAL BELT (AUTO-HIDE + ANIMATED)
+--------------------------------------------------- */
+
+.social-belt {
+  @apply flex flex-wrap justify-center gap-2 mt-2;
+  animation: fadeIn 0.6s ease-in-out both;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+/* Hide if empty (no visible icons) */
+.social-belt:empty {
+  opacity: 0;
+  transform: translateY(4px);
+  visibility: hidden;
+  pointer-events: none;
+  height: 0;
+  margin: 0;
+}
+
+/* Smaller circular icons */
+.social-belt .icon-btn {
+  @apply w-10 h-10;
+}
+.social-belt .icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Subtle hover ring */
+.social-belt .icon-btn:hover {
+  @apply ring-2 ring-offset-1 ring-gray-200;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ---------------------------------------------------
+   DASHBOARD & ANALYTICS
+--------------------------------------------------- */
+
+.analytics-grid {
+  @apply grid grid-cols-3 gap-2 text-center;
+}
+.analytics-grid div {
+  @apply p-3 rounded-xl border bg-white;
+}
+.analytics-grid div span {
+  @apply text-xs text-gray-500;
+}
+
+/* ---------------------------------------------------
+   SCROLLBAR POLISH
+--------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------------------------------------------------
+   BRAND COLORS (Tailwind extension example)
+--------------------------------------------------- */
+
+:root {
+  --brand-50: #f0fdf4;
+  --brand-100: #dcfce7;
+  --brand-200: #bbf7d0;
+  --brand-300: #86efac;
+  --brand-400: #4ade80;
+  --brand-500: #22c55e;
+  --brand-600: #16a34a;
+  --brand-700: #15803d;
+  --brand-800: #166534;
+  --brand-900: #14532d;
+}
+
+/* Optional: map to Tailwind if not extended in config */
+.text-brand-600 { color: var(--brand-600); }
+.text-brand-700 { color: var(--brand-700); }
+.bg-brand-600 { background-color: var(--brand-600); }
+.bg-brand-700 { background-color: var(--brand-700); }
+.ring-brand-500 { --tw-ring-color: var(--brand-500); }
+
+/* ---------------------------------------------------
+   END
+--------------------------------------------------- */
+/* Hero gradient */
+.hero-gradient {
+  background: radial-gradient(1200px 800px at 20% 10%, #6d28d9 0%, #2563eb 40%, #2563eb 60%, #2563eb 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 35%, #0ea5e9 90%);
+  color: #fff;
+}
+
+/* Headings for hero */
+.hero-title {
+  @apply text-3xl md:text-5xl font-bold tracking-tight text-white drop-shadow-sm;
+}
+.hero-subtitle {
+  @apply text-base md:text-lg text-white/90;
+}
+
+/* Large buttons */
+.btn-lg { @apply py-3 text-base rounded-2xl; }
+
+/* Contrast button for hero secondary */
+.btn-contrast {
+  @apply bg-white/15 text-white border-white/20 hover:bg-white/25;
+}
+/* Mobile-only shell */
+.mobile-shell {
+  @apply flex items-stretch justify-center min-h-screen bg-gray-100;
+}
+.mobile-device {
+  width: 390px;              /* iPhone 12/13/14 width */
+  max-width: 100vw;
+  min-height: 100vh;
+  @apply bg-white shadow-xl border border-gray-200;
+}
+.mobile-safe {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  @apply min-h-screen;
+}
+
+/* Make our container tight for mobile */
+.container {
+  @apply px-4 py-4;
+}
